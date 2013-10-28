@@ -1,0 +1,24 @@
+{{ ! For the show view we’ll show an entire obituary and its condolences }}
+
+<article>
+  <h3>
+    {{ obituary.title }} {{ obituary.id }}
+    <small>{{ obituary.author_name }}</small>
+  </h3>
+  <div>
+    {{ obituary.content }}
+  </div>
+</article>
+ 
+<div>
+  <h2>Add A Condolence</h2>
+  {{> condolences._form }}
+ 
+  <section data-role="condolences">
+    {{#obituary.condolences}}
+      <div>
+        {{> condolences._condolence }}
+      </div>
+    {{/obituary.condolences}}
+  </section>
+</div>

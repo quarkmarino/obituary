@@ -15,3 +15,23 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+Route::group(['prefix'=>'admin'], function(){
+	Route::resource('plans', 'admin\PlansController');
+
+	Route::resource('cemeteries', 'admin\CemeteriesController');
+
+	Route::resource('deceaseds', 'admin\DeceasedsController');
+
+	Route::resource('users', 'admin\UsersController');
+
+	Route::resource('mortuaries', 'admin\MortuariesController');
+});
+
+Route::resource('obituaries', 'ObituariesController');
+
+Route::resource('obituaries.events', 'ObituariesEventsController');
+
+Route::resource('obituaries.condolences', 'ObituariesCondolencesController');
+
+Route::resource('obituaries.images', 'ObituariesImagesController');

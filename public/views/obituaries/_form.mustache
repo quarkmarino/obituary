@@ -1,0 +1,39 @@
+{{ ! Here’s the form partial needed to create a obituary, we’ll use this from our API, but this could also be a useful view in an admin panel and other places, which is why we choose to make it a partial. }}
+
+{{#exists}}
+  <form action="/v1/obituaries/{{ obituary.id }}" method="obituary">
+    <input type="hidden" name="_method" value="PUT" />
+{{/exists}}
+{{^exists}}
+  <form action="/v1/obituaries" method="obituary">
+{{/exists}}
+ 
+  <fieldset>
+ 
+    <div class="control-group">
+      <label class="control-label"></label>
+      <div class="controls">
+        <input type="text" name="title" value="{{ obituary.title }}" />
+      </div>
+    </div>
+ 
+    <div class="control-group">
+      <label class="control-label"></label>
+      <div class="controls">
+        <input type="text" name="author_name" value="{{ obituary.author_name }}" />
+      </div>
+    </div>
+ 
+    <div class="control-group">
+      <label class="control-label"></label>
+      <div class="controls">
+        <textarea name="content">{{ obituary.content }}"</textarea>
+      </div>
+    </div>
+ 
+    <div class="form-actions">
+      <input type="submit" class="btn btn-primary" value="Save" />
+    </div>
+ 
+  </fieldset>
+</form>

@@ -10,8 +10,15 @@ class DatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Eloquent::unguard();
-
-		// $this->call('UserTableSeeder');
+		$this->call('PlansTableSeeder');
+		$this->call('CemeteriesTableSeeder');
+		$this->call('DeceasedTableSeeder');
+		$this->call('UsersTableSeeder');
+		$this->call('MortuariesTableSeeder');
+		$this->call('ObituariesTableSeeder');
+		$this->call('EventsTableSeeder');
+		$this->call('CondolencesTableSeeder');
+		$this->call('ImagesTableSeeder');
 	}
 
 }
