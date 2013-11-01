@@ -20,7 +20,7 @@ class ValidationException extends Exception{
   * @param  Laravel\Validator|Laravel\Messages  $validator
   * @return void
   */
-  public function __construct($validator){
+  public function __construct($validator, $code = 400){
     $this->errors = ($validator instanceof Validator) ? $validator->messages() : $validator;
     parent::__construct($this->errors, 400);
   }

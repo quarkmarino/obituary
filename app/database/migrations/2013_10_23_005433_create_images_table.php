@@ -18,7 +18,7 @@ class CreateImagesTable extends Migration {
 			$table->string('file', 255)->nullable();
 			$table->text('comment')->nullable();
 			$table->date('date')->nullable();
-			$table->integer('obituary_id');
+			$table->integer('obituary_id')->unsigned()->index();
 			$table->timestamps();
 
 			$table->foreign('obituary_id')->references('id')->on('obituaries')->onUpdate('cascade');

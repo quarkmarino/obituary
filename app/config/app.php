@@ -184,7 +184,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 
-		'Authority' => 'Authority\AuthorityL4\Facades\Authority',
+		'Authority' 			=> 'Authority\AuthorityL4\Facades\Authority',
 
 	),
 

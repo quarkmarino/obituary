@@ -1,7 +1,9 @@
 <?php
 
 use Repositories\Interfaces\CondolenceInterface;
-use Repositories\Exceptions\ValidationException as ValidationException;
+use Repositories\Errors\Exceptions\ValidationException as ValidationException;
+use Repositories\Errors\Exceptions\NotAllowedException as NotAllowedException;
+use Repositories\Errors\Exceptions\NotFoundException as NotFoundException;
 
 class ObituariesCondolencesController extends BaseController {
 
@@ -20,24 +22,26 @@ class ObituariesCondolencesController extends BaseController {
    *
    * @return Response
    */
-  /*public function index($obituary_id){
-    $condolences = $this->condolences->findAll($obituary_id);
-    return View::make('condolences.index', compact('condolences'));
-  }*/
- 
+  public function index($obituary_id){
+    if( Authority::can('manage', 'Condolences') ){
+      $condolences = $this->condolences->findAll($obituary_id);
+      return View::make('condolences.index', compact('condolences'));
+    }
+    throw new NotAllowedException();
+  }
 
 	/**
    * Show the form for creating a new resource.
    *
    * @return Response
    */
-  /*public function create($obituary_id){
-    $condolence = $this->condolences->instance(array(
-      'obituary_id' => $obituary_id
-    ));
- 
-    return View::make('condolences._form', compact('condolence'));
-  }*/
+  public function create($obituary_id){
+    if( Authority::can('manage', 'Condolences') ){
+      $condolence = $this->condolences->instance(['obituary_id' => $obituary_id]);
+      return View::make('condolences._form', compact('condolence'));
+    }
+    throw new NotAllowedException();
+  }
 
 	/**
    * Store a newly created resource in storage.
@@ -46,20 +50,10 @@ class ObituariesCondolencesController extends BaseController {
    */
   public function store($obituary_id){
     $input = Input::all();
-    try{
-        $condolence = $this->condolences->store( $obituary_id, $input );
-        if( Authority::can('manage', $condolence) ){
-          return Redirect::route('obituaries.show', [$obituary_id, $condolence->id]);
-        }
-        return Response::json(array('message' => 'The condolence has been submited to review.'));
-      }
-    }
-    catch(NotAllowedException $e){
-      return Response::json($e->getMessage(), 403);
-    }
-    catch(ValidationException $e){
-      return Response::json($e->getErrors()->toArray(), 400);
-    }
+    $condolence = $this->condolences->store($obituary_id, $input);
+    return Authority::can('moderate', $condolence) ?
+      Redirect::route('obituaries.condolences.show', [$obituary_id, $condolence->id]) :
+      Response::json(['message' => 'The condolence has been submited to review.']);
   }
 
 	/**
@@ -69,8 +63,13 @@ class ObituariesCondolencesController extends BaseController {
    * @return Response
    */
   public function show($obituary_id, $id){
-    $condolence = $this->condolences->findById($obituary_id, $id);
-    return Response::json($condolence);
+    if( Authority::can('moderate', 'Condolences') ){
+      $condolence = $this->condolences->findById($obituary_id, $id);
+      return Request::ajax() ?
+        Response::json($condolence) :
+        View::make('condolences.show', compact('condolence'));
+    }
+    throw new NotAllowedException;
   }
 
 	/**
@@ -79,25 +78,31 @@ class ObituariesCondolencesController extends BaseController {
    * @param int $id
    * @return Response
    */
-  /*public function edit($obituary_id, $id){
-    $condolence = $this->condolences->findById($obituary_id, $id);
-
-    return View::make('condolences._form', compact('condolence'));
-  }*/
+  public function edit($obituary_id, $id){
+    if( Authority::can('manage', 'Condolences') ){
+      $condolence = $this->condolences->findById($obituary_id, $id);
+      return View::make('condolences._form', compact('condolence'));
+    }
+    throw new NotAllowedException;
+  }
 
 	/**
    * Update the specified resource in storage.
-   *
+   * 
    * @param int $id
    * @return Response
    */
   public function update($obituary_id, $id){
-    if( Authority::can('manage', 'Condolences') ){
-      return Redirect::route('obituaries.show', $condolence->id);
+    $input = Input::all();
+    if( Authority::can('update', 'Condolences') ){
+      $condolence = $this->condolences->update($obituary_id, $id, $input);
+      if( Authority::cannot('manage', 'Condolences') ){
+        $response = ['message' => 'The condolence has been updated.', 'condolence_status' => $condolence->status];
+        return Response::json($response);
+      }
+      return Redirect::route('obituaries.condolences.show', [$obituary_id, $id]);
     }
-    elseif( Authority::can('create', 'Condolences') ){
-      return Response::json(array('status' => 'success', 'message' => 'The condolence has been submited to review.'));
-    }
+    throw new NotAllowedException;
   }
 
 	/**
@@ -107,8 +112,11 @@ class ObituariesCondolencesController extends BaseController {
    * @return Response
    */
   public function destroy($obituary_id, $id){
-    $this->condolences->destroy($obituary_id, $id);
-    return '';
+    if( Authority::can('manage', 'Condolences') ){
+      $this->condolences->destroy($obituary_id, $id);
+      return Response::json(['message' => 'The condolence has been deleted.']);
+    }
+    throw new NotAllowedException;
   }
 
 }

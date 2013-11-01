@@ -28,6 +28,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
    */
   private function prepareForTests(){
     Artisan::call('migrate', ['--seed' => 'true']);
+    Artisan::call('migrate', ['--package' => 'machuga/authority-l4']);
     Mail::pretend(true);
   }
 
@@ -55,9 +56,48 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
 	public function __call($method, $args){
 		if (in_array($method, ['get', 'post', 'put', 'patch', 'delete'])){
-			return $this->call($method, $args[0]);
+			array_unshift($args, $method);
+			return call_user_func_array([$this, 'call'], $args);
 		}
 
 		throw new BadMethodCallException;
 	}
+
+	/**
+   * Assert that the client response is equals to expected.
+   *
+   * @return void
+   */
+	public function assertResponseContentEquals($expected){
+		$response = $this->client->getResponse();
+
+		$content = $response->getContent();
+
+		$this->assertEquals($expected, $content);
+	}
+
+	/**
+   * Assert that the client response is in json format.
+   *
+   * @return void
+   */
+	public function assertResponseContentIsJson(){
+		$response = $this->client->getResponse();
+
+		$content = json_decode($response->getContent());
+
+		//var_dump($content);
+		$this->assertNotNull($content, 'Response content is not in json format.');
+	}
+
+	/**
+   * Assert that the client response equals to expected json.
+   *
+   * @return void
+   */
+	public function assertResponseContentEqualsJson($json){
+		$this->assertResponseContentIsJson();
+		$this->assertJsonStringEqualsJsonString($json, $this->client->getResponse()->getContent());
+	}
+
 }

@@ -20,11 +20,11 @@ class CreateObituariesTable extends Migration {
 			$table->enum('religion', ["-1", "-2", "-3", "-4", "-5"])->nullable();
 			$table->date('term_limit');
 			$table->enum('style', ["0", "1", "2", "3", "4", "5"])->default(0);
-			$table->integer('deceased_id');
-			$table->integer('promoter_id');
-			$table->integer('owner_id')->nullable();
-			$table->integer('funeral_id');
-			$table->integer('burial_id')->nullable();
+			$table->integer('deceased_id')->unsigned()->index();
+			$table->integer('promoter_id')->unsigned()->index();
+			$table->integer('owner_id')->unsigned()->nullable()->index();
+			$table->integer('funeral_id')->unsigned()->index();
+			$table->integer('burial_id')->unsigned()->nullable()->index();
 			$table->timestamps();
 
 			$table->foreign('deceased_id')->references('id')->on('deceased')->onUpdate('cascade');

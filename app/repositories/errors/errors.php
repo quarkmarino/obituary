@@ -33,16 +33,20 @@
 /**
  * Not Allowed Exception Handler for json API
  */
-/*App::error(function(NotAllowedException $e, $code){
-  return Response::json($e->getMessage(), $e->getCode());
-});*/
+App::error(function(NotAllowedException $e){
+  return Request::ajax() ?
+    Response::json($e->getMessage(), $e->getCode()) :
+    Response::make(View::make('errors.403'), $e->getCode());
+});
  
 /**
  * Validation Exception Handler for json API
  */
-/*App::error(function(ValidationException $e, $code){
-  return Response::json($e->getMessages(), $code);
-});*/
+App::error(function(ValidationException $e){
+  return Request::ajax() ?
+    Response::json($e->getErrors()->toArray(), $e->getCode()) :
+    Response::make(View::make('errors.400'), $e->getCode());
+});
  
 /**
  * Not Found Exception Handler for json API
@@ -55,25 +59,20 @@
  * Not Found Exception Handler for web site
  */
 
-App::missing(function(NotFoundException $exception)
+App::missing(function(NotFoundException $e)
 {
-  if (Request::is('admin/*'))
-    return Response::make(View::make('admin.errors.404'), 404);
-  else
-    return Response::make(View::make('errors.404'), 404);
+  return Request::ajax() ?
+    Response::json($e->getMessage(), $e->getCode()) :
+    (
+      Request::is('admin/*') ?
+        Response::make(View::make('admin.errors.404'), $e->getCode()) :
+        Response::make(View::make('errors.404'), $e->getCode());
+    )
+  }
 });
 
-App::error(function($exception, $code)
-{
-  switch ($code)
-  {
-    case 403:
-      return Response::make(View::make('errors.403'), 403);
-
-    case 500:
-      return Response::make(View::make('errors.500'), 500);
-
-    default:
-      return Response::make(View::make('errors.default'), $code);
-  }
+App::error(function($exception, $code){
+  return $code == 500 ?
+    Response::make(View::make('errors.500'), 500) :
+    Response::make(View::make('errors.default'), $code);
 });

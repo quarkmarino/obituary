@@ -16,7 +16,7 @@ class CreateMortuariesTable extends Migration {
 			$table->increments('id');
 			$table->string('name', 45);
 			$table->string('location', 255);
-			$table->integer('owner_id');
+			$table->integer('owner_id')->unsigned()->index();
 			$table->timestamps();
 
 			$table->foreign('owner_id')->references('id')->on('users')->onUpdate('cascade');

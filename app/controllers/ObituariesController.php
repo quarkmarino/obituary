@@ -23,7 +23,7 @@ class ObituariesController extends BaseController {
 	public function index()
 	{
 		$obituaries = $this->obituary->findAll();
-    return View::make('obituaries.index', compact('obituaries'));
+		return View::make('obituaries.index', compact('obituaries'));
 	}
 
 	/**
@@ -68,7 +68,7 @@ class ObituariesController extends BaseController {
 	{
 		try{
 			$obituary = $this->obituary->findById($id);
-			return View::make('obituaries.edit', compact('obituary'));
+			return View::make('obituaries.show', compact('obituary'));
 		}
 		catch(NotFoundException $e){
 			App::abort(404, 'Page not found');

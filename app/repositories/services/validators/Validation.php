@@ -9,9 +9,9 @@ use Repositories\Errors\Exceptions\ValidationException as ValidationException;
 
 abstract class Validation{
 
-	public static $rules = array();
+	public static $rules = [];
 
-	public static $messages = array();
+	public static $messages = [];
 
 	/**
 	 * Validator object.
@@ -36,8 +36,9 @@ abstract class Validation{
 	 * @throws ValidateException
 	 * @return boolean true
 	 */
-	public function validate($data){
-		$this->validator = Validator::make($data, static::$rules, static::$messages = array());
+	//public function validate($data){
+	public function validate($data, $rules = static::$rules, $messages = static::$messages){
+		$this->validator = Validator::make($data, $rules, $messages = []);
 
 		if($this->validator->fails()){
 			throw new ValidationException($this->validator);

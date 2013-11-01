@@ -27,17 +27,25 @@ class Condolence implements CondolenceInterface {
   }
  
   public function store($obituary_id, $data){
-    if( Authority::can('create', 'Condolence') ){
+    //if( Authority::can('create', 'Condolence') ){
       $data['obituary_id'] = $obituary_id;
       $this->validation($data);
       return \Models\Condolence::create($data);
-    }
+    /*}
+    else
+      throw new NotAllowedException;*/
+      
   }
  
   public function update($obituary_id, $id, $data){
     $condolence = $this->findById($obituary_id, $id);
     $condolence->fill($data);
-    $this->validation($condolence->toArray());
+    if( Authority::can('manage', 'Condolence') )
+      $this->validation($condolence->toArray());
+    else{
+      $rules = ['status' => 'required_without:id,name,email,message,offering,obituary_id|in:-1,1'];
+      $this->validation($data->toArray(), $rules);
+    }
     $condolence->save();
     return $condolence;
   }
@@ -48,11 +56,11 @@ class Condolence implements CondolenceInterface {
     return true;
   }
  
-  public function validation($data){
-    return $this->validator->validate($data);
+  public function validation($data, $rules = null){
+    return $this->validator->validate($data, $rules);
   }
  
-  public function instance($data = array()){
+  public function instance($data = []){
     return new \Models\Condolence($data);
   }
  

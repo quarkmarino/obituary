@@ -1,12 +1,13 @@
 <?php
-return array(
+return [
   'default' => 'sqlite',
 
-  'connections' => array(
-    'sqlite' => array(
+  'connections' => [
+    'sqlite' => [
 			'driver'   => 'sqlite',
 			'database' => ':memory:',
+			//'database' => __DIR__.'/../../database/test.sqlite',
 			'prefix'   => '',
-		),
-  )
-);
+		],
+  ]
+];
