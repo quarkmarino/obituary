@@ -31,7 +31,7 @@ class UsersTableSeeder extends Seeder {
 				'password' => Hash::make('promoter_password'),
 				'email' => 'promoter@obituaries.com',
 				'status' => 1,
-				'role' => 0,
+				'role' => 2,
 				'created_at' => 'CURRENT_TIMESTAMP',
 				'updated_at' => 'CURRENT_TIMESTAMP'
 			],
@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder {
 				'password' => Hash::make('client_password'),
 				'email' => 'client@obituaries.com',
 				'status' => 1,
-				'role' => 0,
+				'role' => 1,
 				'created_at' => 'CURRENT_TIMESTAMP',
 				'updated_at' => 'CURRENT_TIMESTAMP'
 			],

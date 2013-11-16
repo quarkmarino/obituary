@@ -78,3 +78,41 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+// App::error(function(Exception $e, $code){
+//   return $code == 500 ?
+//     Response::make(View::make('errors.500'), 500) :
+//     Response::make(View::make('errors.default'), $code);
+// });
+
+/**
+ * Validation Exception Handler for json API
+ */
+App::error(function(Repositories\Errors\Exceptions\ValidationException $e, $code){
+  return Request::ajax() ?
+    Response::json($e->getErrors()->toArray(), $code) :
+    Response::make(View::make('errors.400'), $code);
+});
+
+/**
+ * Not Found Exception Handler for web site
+ */
+
+App::error(function(Repositories\Errors\Exceptions\NotFoundException $e, $code){
+  return Request::ajax() ?
+    Response::json($e->getMessage(), $code) :
+    (
+      Request::is('admin/*') ?
+        Response::make(View::make('admin.errors.404'), $code) :
+        Response::make(View::make('errors.404'), $code)
+    );
+});
+
+/**
+ * Not Allowed Exception Handler for json API
+ */
+App::error(function(Repositories\Errors\Exceptions\NotAllowedException $e, $code){
+  return Request::ajax() ?
+    Response::json($e->getMessage(), $code) :
+    Response::make(View::make('errors.403'), $code);
+});

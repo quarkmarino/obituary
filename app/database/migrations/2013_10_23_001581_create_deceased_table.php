@@ -20,7 +20,12 @@ class CreateDeceasedTable extends Migration {
 			$table->date('date');
 			$table->string('cause', 128)->nullable();
 			$table->string('appelation', 32)->nullable();
+			$table->integer('mortuary_id')->unsigned()->index();
+			$table->integer('cemetery_id')->unsigned()->nullable()->index();
 			$table->timestamps();
+
+			$table->foreign('mortuary_id')->references('id')->on('mortuaries')->onUpdate('cascade');
+			$table->foreign('cemetery_id')->references('id')->on('cemeteries')->onUpdate('cascade');
 		});
 	}
 

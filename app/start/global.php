@@ -81,3 +81,62 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+
+
+// Define the Basset collection
+/*Basset::collection('application', function($collection){
+	// Switch to the css directory and require the "less" directory.
+	// These directories both have a filter applied to them so that the built
+	// collection will contain valid CSS.
+	$stylesheets = $collection->directory('assets/css', function($collection){
+		$collection->requireDirectory('vendor/bootstrap');
+		//$collection->requireDirectory('vendor/fuelux');
+		$collection->stylesheet('vendor/fuelux/fuelux.css');
+		$collection->stylesheet('vendor/fuelux/fuelux-responsive.css');
+		$collection->stylesheet('//fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic');
+		$collection->requireDirectory('vendor/font-awesome');
+		$collection->stylesheet('styles-bluegreen.css');
+		$collection->stylesheet('settings-panel.css');
+		//$collection->requireDirectory();
+	});
+
+	$stylesheets->apply('CssMin');
+	//$stylesheets->apply('UriRewriteFilter');
+
+	// Switch to the js directory.
+	$javascripts = $collection->directory('assets/js', function($collection){
+		$collection->requireDirectory('vendor/jquery');
+		//$collection->requireDirectory('vendor/fuelux');
+		//$collection->javascript('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+		$collection->javascript('settings-panel.js');
+		$collection->javascript('vendor/fuelux/loader.js');
+	});
+
+	$javascripts->apply('JsMin');
+});
+
+// Define the Basset collection
+Basset::collection('post_page', function($collection){
+	$javascripts = $collection->directory('assets/js', function($collection){
+		$collection->requireDirectory('vendor/bootstrap');
+		$collection->requireDirectory('vendor/modernizr');
+	});
+
+	$javascripts->apply('JsMin');
+});
+
+Basset::collection('ie8', function($collection){
+	$stylesheets = $collection->directory('assets/css', function($collection){
+		$collection->stylesheet('ie8.css');
+	});
+
+	$stylesheets->apply('CssMin');
+	//$stylesheets->apply('UriRewriteFilter');
+
+	$javascripts = $collection->directory('assets/js', function($collection){
+		$collection->requireDirectory('vendor/google');
+	});
+
+	$javascripts->apply('JsMin');
+});*/

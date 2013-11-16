@@ -1,12 +1,13 @@
 <?php
 
-namespace Admin;
+namespace Controllers\Admin;
  
 //import classes that are not in this new namespace
-use BaseController;
+use Controllers\BaseController;
 use Input;
 use View;
 use Redirect;
+use Authority;
 use Repositories\Interfaces\CemeteryInterface;
 use Repositories\Exceptions\ValidationException as ValidationException;
 

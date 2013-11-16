@@ -13,25 +13,50 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return View::make('index');
 });
 
 Route::group(['prefix'=>'admin'], function(){
-	Route::resource('plans', 'admin\PlansController');
+	Route::resource('plans', 'Controllers\Admin\PlansController');
 
-	Route::resource('cemeteries', 'admin\CemeteriesController');
+	Route::resource('cemeteries', 'Controllers\Admin\CemeteriesController');
 
-	Route::resource('deceaseds', 'admin\DeceasedsController');
+	Route::resource('deceased', 'Controllers\Admin\DeceasedController');
 
-	Route::resource('users', 'admin\UsersController');
+	Route::resource('users', 'Controllers\Admin\UsersController');
 
-	Route::resource('mortuaries', 'admin\MortuariesController');
+	Route::resource('mortuaries', 'Controllers\Admin\MortuariesController');
 });
 
-Route::resource('obituaries', 'ObituariesController');
+Route::get('login', function(){
+	$roles = [
+		'admin' => [
+			'username' => 'admin',
+			'password' => 'admin_password'
+		],
+		'promoter' => [
+			'username' => 'promoter',
+			'password' => 'promoter_password'
+		],
+		'owner' => [
+			'username' => 'owner',
+			'password' => 'owner_password'
+		],
+		'guest' => [
+			'username' => 'guest',
+			'password' => 'no_password'
+		],
+	];
+	Auth::attempt($roles['admin']);
+	echo 'Login';
+});
 
-Route::resource('obituaries.events', 'ObituariesEventsController');
+Route::resource('obituaries', 'Controllers\ObituariesController');
 
-Route::resource('obituaries.condolences', 'ObituariesCondolencesController');
+Route::resource('obituaries.deceased', 'Controllers\ObituariesDeceasedController', ['except' => ['create', 'edit', 'destroy']]);
 
-Route::resource('obituaries.images', 'ObituariesImagesController');
+Route::resource('obituaries.events', 'Controllers\ObituariesEventsController', ['except' => ['create', 'edit']]);
+
+Route::resource('obituaries.condolences', 'Controllers\ObituariesCondolencesController');
+
+Route::resource('obituaries.memories', 'Controllers\ObituariesMemoriesController', ['except' => ['create', 'edit']]);

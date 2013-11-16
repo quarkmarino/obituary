@@ -2,7 +2,7 @@
 
 use Repositories\Errors\Exceptions\ValidationException as ValidationException;
 use Repositories\Errors\Exceptions\NotAllowedException as NotAllowedException;
-use Repositories\Errors\Exceptions\NotFoundException as NotFoundException;
+use Repositories\Errors\Exceptions\NotFoundException   as NotFoundException;
 use Models\Condolence as Condolence;
 
 class CondolencesControllerTest extends TestCase {
@@ -25,7 +25,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testIndexShouldFailDueToPermission(){
     Auth::attempt(['username' => 'guest', 'password' => 'no_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(false);
+    Authority::shouldReceive('can')->once()->with('admin', 'Condolences')->andReturn(false);
 
     $this->get(route('obituaries.condolences.index', 1));
 
@@ -37,7 +37,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testIndexShouldCallFindAllMethod(){
     Auth::attempt(['username' => 'admin', 'password' => 'admin_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(true);
+    Authority::shouldReceive('can')->once()->with('admin', 'Condolences')->andReturn(true);
 
     $this->mock->shouldReceive('findAll')->once()->with(1)->andReturn(new Condolence);
     $this->get(route('obituaries.condolences.index', 1));
@@ -54,7 +54,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testCreateShouldFailDueToPermission(){
     Auth::attempt(['username' => 'guest', 'password' => 'no_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(false);
+    Authority::shouldReceive('can')->once()->with('admin', 'Condolences')->andReturn(false);
 
     $this->get(route('obituaries.condolences.create', 1));
 
@@ -66,7 +66,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testCreateShouldCallInstanceMethod(){
     Auth::attempt(['username' => 'admin', 'password' => 'admin_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(true);
+    Authority::shouldReceive('can')->once()->with('admin', 'Condolences')->andReturn(true);
 
     $this->mock->shouldReceive('instance')->once()->andReturn(new Condolence);
     $this->get(route('obituaries.condolences.create', 1));
@@ -154,9 +154,9 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testShowShouldFailDueToPermission(){
     Auth::attempt(['username' => 'guest', 'password' => 'no_password']);
-    Authority::shouldReceive('can')->once()->with('moderate', 'Condolences')->andReturn(false);
+    Authority::shouldReceive('can')->once()->with('moderate', Mockery::type('Models\Condolence'))->andReturn(false);
 
-    //$this->mock->shouldReceive('findById')->once()->with(1, 2)->andThrow(new NotFoundException());
+    $this->mock->shouldReceive('findById')->once()->with(1, 2)->andReturn(new Condolence(['id' => 2]));
     $this->get(route('obituaries.condolences.show', [1, 2]));
 
     $this->assertResponseStatus(403);
@@ -168,7 +168,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testShowByAjaxShouldCallFindByIdMethodAndSuccess(){
     Auth::attempt(['username' => 'client', 'password' => 'client_password']);
-    Authority::shouldReceive('can')->once()->with('moderate', 'Condolences')->andReturn(true);
+    Authority::shouldReceive('can')->once()->with('moderate', Mockery::type('Models\Condolence'))->andReturn(true);
 
     $condolence = new Condolence(['id' => 2]);
     $this->mock->shouldReceive('findById')->once()->with(1, 2)->andReturn($condolence);
@@ -184,7 +184,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testShowShouldCallFindByIdMethodAndSuccess(){
     Auth::attempt(['username' => 'client', 'password' => 'client_password']);
-    Authority::shouldReceive('can')->once()->with('moderate', 'Condolences')->andReturn(true);
+    Authority::shouldReceive('can')->once()->with('moderate', Mockery::type('Models\Condolence'))->andReturn(true);
 
     $this->mock->shouldReceive('findById')->once()->with(1, 2)->andReturn(new Condolence(['id' => 2]));
     $this->get(route('obituaries.condolences.show', [1, 2]));
@@ -202,8 +202,9 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testEditShouldFailDueToPermission(){
     Auth::attempt(['username' => 'guest', 'password' => 'no_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(false);
+    Authority::shouldReceive('can')->once()->with('admin', Mockery::type('Models\Condolence'))->andReturn(false);
 
+    $this->mock->shouldReceive('findById')->once()->with(1, 2)->andReturn(new Condolence(['id' => 2]));
     $this->get(route('obituaries.condolences.edit', [1, 2]));
     
     $this->assertResponseStatus(403);
@@ -214,7 +215,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testEditShouldCallFindByIdMethodAndSuccess(){
     Auth::attempt(['username' => 'admin', 'password' => 'admin_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(true);
+    Authority::shouldReceive('can')->once()->with('admin', Mockery::type('Models\Condolence'))->andReturn(true);
 
     $this->mock->shouldReceive('findById')->once()->with(1, 2)->andReturn(new Condolence(['id' => 2]));
     $this->get(route('obituaries.condolences.edit', [1, 2]));
@@ -233,6 +234,7 @@ class CondolencesControllerTest extends TestCase {
     Auth::attempt(['username' => 'guest', 'password' => 'no_password']);
     Authority::shouldReceive('can')->once()->with('update', 'Condolences')->andReturn(false);
 
+    $input = ['status' => 1];
     $input = ['name' => 'Foo Name', 'email' => 'Bar Email', 'message' => 'Baz Message'];
     $this->put(route('obituaries.condolences.update', [1, 2]), $input);
 
@@ -251,7 +253,7 @@ class CondolencesControllerTest extends TestCase {
     $this->mock->shouldReceive('update')->once()->with(1, 2, $input)->andReturn(new Condolence(['id' => 2, 'status' => 1]));
     $this->put(route('obituaries.condolences.update', [1, 2]), $input);
 
-    $response = ['message' => 'The condolence has been updated.', 'condolence_status' => 1];
+    $response = ['message' => 'The condolence status has been updated.', 'condolence_status' => 1];
     $this->assertResponseOk();
     $this->assertResponseContentEqualsJson(json_encode($response));
   }
@@ -280,7 +282,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testDestroyShouldFailDueToPermission(){
     Auth::attempt(['username' => 'promoter', 'password' => 'promoter_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(false);
+    Authority::shouldReceive('can')->once()->with('delete', 'Condolences')->andReturn(false);
 
     $this->delete( route('obituaries.condolences.destroy', [1, 2]));
  
@@ -292,7 +294,7 @@ class CondolencesControllerTest extends TestCase {
    */
   public function testDestroyShouldCallDestroyMethod(){
     Auth::attempt(['username' => 'promoter', 'password' => 'promoter_password']);
-    Authority::shouldReceive('can')->once()->with('manage', 'Condolences')->andReturn(true);
+    Authority::shouldReceive('can')->once()->with('delete', 'Condolences')->andReturn(true);
 
     $this->mock->shouldReceive('destroy')->once()->with(1, 2)->andReturn(true);
  

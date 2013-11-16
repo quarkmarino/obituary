@@ -5,7 +5,11 @@ namespace Models;
 use Eloquent;
 
 class Plan extends Eloquent {
-	protected $guarded = array();
+	protected $guarded = [];
 
-	public static $rules = array();
+	public static $rules = [];
+
+	public function users(){
+		return $this->hasMany('Models\User');
+	}
 }

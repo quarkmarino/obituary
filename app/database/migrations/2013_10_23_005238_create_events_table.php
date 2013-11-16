@@ -18,8 +18,8 @@ class CreateEventsTable extends Migration {
 			$table->text('text');
 			$table->string('location', 255);
 			$table->datetime('datetime');
-			$table->timestamps();
 			$table->integer('obituary_id')->unsigned()->index();
+			$table->timestamps();
 
 			$table->foreign('obituary_id')->references('id')->on('obituaries')->onUpdate('cascade');
 		});

@@ -5,7 +5,11 @@ namespace Models;
 use Eloquent;
 
 class Cemetery extends Eloquent {
-	protected $guarded = array();
+	protected $guarded = [];
 
-	public static $rules = array();
+	public static $rules = [];
+
+	public function deceased(){
+		return $this->hasMany('Models\Deceased', 'burial_id');
+	}
 }

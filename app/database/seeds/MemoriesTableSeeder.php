@@ -1,18 +1,18 @@
 <?php
 
-class DeceasedTableSeeder extends Seeder {
+class MemoriesTableSeeder extends Seeder {
 
 	public function run()
 	{
 		// Uncomment the below to wipe the table clean before populating
-		// DB::table('deceased')->truncate();
+		// DB::table('memory')->truncate();
 
-		$deceased = array(
+		$memory = array(
 
 		);
 
 		// Uncomment the below to run the seeder
-		// DB::table('deceased')->insert($deceased);
+		// DB::table('memory')->insert($memory);
 	}
 
 }

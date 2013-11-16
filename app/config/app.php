@@ -13,7 +13,7 @@ return array(
 	|
 	*/
 
-	'debug' => false,
+	'debug' => true,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ return array(
 	|
 	*/
 
-	'key' => 'YourSecretKey!!!',
+	'key' => '4r1fEkhE81RAR2fwKUZ3PT7VoGzUw7qG',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -118,6 +118,7 @@ return array(
 		'Way\Generators\GeneratorsServiceProvider',
 		'Repositories\Services\Provider\EloquentProvider',
 		'Authority\AuthorityL4\AuthorityL4ServiceProvider',
+		//'Basset\BassetServiceProvider',
 
 	),
 
@@ -185,6 +186,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 
 		'Authority' 			=> 'Authority\AuthorityL4\Facades\Authority',
+		//'Basset'					=> 'Basset\Facade'
 
 	),
 

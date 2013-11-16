@@ -37,7 +37,9 @@ abstract class Validation{
 	 * @return boolean true
 	 */
 	//public function validate($data){
-	public function validate($data, $rules = static::$rules, $messages = static::$messages){
+	public function validate($data, $rules = null, $messages = null){
+		$rules = $rules ?: static::rules;
+		$messages = $messages ?: static::messages;
 		$this->validator = Validator::make($data, $rules, $messages = []);
 
 		if($this->validator->fails()){

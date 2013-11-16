@@ -5,7 +5,11 @@ namespace Models;
 use Eloquent;
 
 class Event extends Eloquent {
-	protected $guarded = array();
+	protected $guarded = [];
 
-	public static $rules = array();
+	public static $rules = [];
+
+	public function obituary(){
+		return $this->belongsTo('Models\Obituary');
+	}
 }

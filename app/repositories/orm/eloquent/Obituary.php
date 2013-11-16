@@ -4,7 +4,8 @@ namespace Repositories\ORM\Eloquent;
 
 use Repositories\Interfaces\ObituaryInterface;
 use Repositories\Services\Validators\ObituaryValidator;
-use Repositories\Exceptions\Errors\NotFoundException as NotFoundException;
+use Repositories\Errors\Exceptions\NotFoundException as NotFoundException;
+use Authority\Authority as Authority;
  
 class Obituary implements ObituaryInterface {
 
@@ -15,25 +16,33 @@ class Obituary implements ObituaryInterface {
   }
 
   public function findById($id){
-    $obituary = \Models\Obituary::with([
-        'comments' => function($q){
-          $q->orderBy('created_at', 'desc');
-        }
-      ])
-      ->where('id', $id)
-      ->first();
+    $obituary = \Models\Obituary::where('id', $id)
+    ->with([
+      'condolences' => function($q){ $q->orderBy('created_at', 'desc'); },
+      'events' => function($q){ $q->orderBy('created_at', 'desc'); },
+      'memories' => function($q){ $q->orderBy('created_at', 'desc'); },
+    ])
+    ->first();
     if(!$obituary) throw new NotFoundException('Obituary Not Found');
     return $obituary;
   }
 
   public function findAll(){
-    return \Models\Obituary::with([
-        'comments' => function($q){
-          $q->orderBy('created_at', 'desc');
-        }
-      ])
-      ->orderBy('created_at', 'desc')
-      ->get();
+    $authority = new Authority(\Auth::user());
+    if( $authority->user()->hasRole('promoter') )
+      $obituaries = \Models\Obituary::promoted();
+    elseif( $authority->user()->hasRole('owner') )
+      $obituaries = \Models\Obituary::owned();
+    else
+      $obituaries = new \Models\Obituary;
+
+    return $obituaries->with([
+      'condolences' => function($q){ $q->orderBy('created_at', 'desc'); },
+      'events' => function($q){ $q->orderBy('created_at', 'desc'); },
+      'memories' => function($q){ $q->orderBy('created_at', 'desc'); },
+    ])
+    ->orderBy('created_at', 'desc')
+    ->get();
   }
 
   public function paginate($limit = null){

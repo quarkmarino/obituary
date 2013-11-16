@@ -1,6 +1,7 @@
 /bootstrap/compiled.php
 /vendor
-public/node_modules
+/components
+/node_modules
 composer.phar
 composer.lock
 .DS_Store

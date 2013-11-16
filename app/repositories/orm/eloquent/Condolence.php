@@ -40,7 +40,7 @@ class Condolence implements CondolenceInterface {
   public function update($obituary_id, $id, $data){
     $condolence = $this->findById($obituary_id, $id);
     $condolence->fill($data);
-    if( Authority::can('manage', 'Condolence') )
+    if( Authority::can('admin', 'Condolence') )
       $this->validation($condolence->toArray());
     else{
       $rules = ['status' => 'required_without:id,name,email,message,offering,obituary_id|in:-1,1'];

@@ -1,5 +1,10 @@
 <?php
 
+namespace Controllers;
+
+use Controller;
+use View;
+
 class BaseController extends Controller {
 
 	/**

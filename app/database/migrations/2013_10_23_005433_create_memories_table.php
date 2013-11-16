@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateImagesTable extends Migration {
+class CreateMemoriesTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,12 +12,13 @@ class CreateImagesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('images', function(Blueprint $table) {
+		Schema::create('memories', function(Blueprint $table) {
 			$table->increments('id');
 			$table->string('url', 255)->nullable();
 			$table->string('file', 255)->nullable();
 			$table->text('comment')->nullable();
 			$table->date('date')->nullable();
+			$table->enum('type', ["0", "1"])->default(0);
 			$table->integer('obituary_id')->unsigned()->index();
 			$table->timestamps();
 
@@ -33,7 +34,7 @@ class CreateImagesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('images');
+		Schema::drop('memories');
 	}
 
 }

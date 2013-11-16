@@ -1,0 +1,34 @@
+{
+  "name": "online-obituaries",
+  "version": "0.0.1",
+  "authors": [
+    "quarkmarino <quarkmarino@gmail.com>"
+  ],
+  "description": "An online obituaries service.",
+  "keywords": [
+    "qr",
+    "obituaries",
+    "bootstrap"
+  ],
+  "license": "MIT",
+  "homepage": "http://obituaries.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "latest",
+    "underscore": "latest",
+    "backbone": "latest",
+    "bootstrap": "latest",
+    "mustache": "latest",
+    "fuelux": "latest",
+    "modernizr": "latest",
+    "requirejs": "latest"
+  },
+  "private": true
+}

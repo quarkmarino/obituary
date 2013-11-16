@@ -6,7 +6,6 @@
 	"require": {
 		"laravel/framework": "4.0.*",
 		"fideloper/proxy": "dev-master",
-		"twitter/bootstrap": "dev-master",
 		"way/generators": "dev-master",
 		"machuga/authority-l4" : "dev-master"
 	},
@@ -22,7 +21,8 @@
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php",
-			"app/repositories"
+			"app/repositories",
+			"app/repositories/errors/errors.php"
 		]
 	},
 	"scripts": {

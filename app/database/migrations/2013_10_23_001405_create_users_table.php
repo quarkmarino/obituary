@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration {
 			$table->string('email', 18);
 			$table->enum('status', ["-1", "0", "1"]);
 			$table->enum('role', ["0", "1", "2", "3"]);
-			$table->integer('plan_id')->nullable()->unsigned()->index();
+			$table->integer('plan_id')->nullable()->unsigned()->index()->default(null);
 			$table->timestamps();
 
 			$table->unique('username');
